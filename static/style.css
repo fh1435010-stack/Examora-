@@ -1,0 +1,72 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background: linear-gradient(to bottom, #03152b, #000814);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    font-family:'Poppins', sans-serif;
+}
+
+.splash-container{
+    text-align:center;
+    animation: fadeIn 2s ease;
+}
+
+.logo{
+    width:140px;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px #00c3ff);
+}
+
+.brand{
+    margin-top:20px;
+    font-size:48px;
+    font-family:'Cinzel', serif;
+    letter-spacing:4px;
+}
+
+.exam{
+    color:white;
+}
+
+.ora{
+    color:#00cfff;
+}
+
+.tagline{
+    margin-top:12px;
+    color:#b8dfff;
+    font-size:16px;
+    letter-spacing:3px;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+    }
+
+    to{
+        opacity:1;
+    }
+}
