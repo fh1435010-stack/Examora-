@@ -7,6 +7,7 @@ app.secret_key = "examora_secret_key"
 # ---------------- DATABASE ---------------- #
 
 def init_db():
+
     conn = sqlite3.connect("examora.db")
     cursor = conn.cursor()
 
@@ -14,7 +15,9 @@ def init_db():
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT UNIQUE,
-        password TEXT
+        password TEXT,
+        board TEXT,
+        class_name TEXT
     )
     """)
 
@@ -53,6 +56,7 @@ def login():
 
         # ADMIN LOGIN
         if username == ADMIN_NAME and password == ADMIN_PASSWORD:
+
             session['admin'] = username
             return redirect('/admin')
 
@@ -70,7 +74,13 @@ def login():
         conn.close()
 
         if user:
+
             session['user'] = username
+
+            # CHECK FIRST TIME SETUP
+            if user[3] is None or user[4] is None:
+                return redirect('/setup')
+
             return redirect('/dashboard')
 
         return "Invalid Username or Password"
@@ -95,6 +105,7 @@ def signup():
         cursor = conn.cursor()
 
         try:
+
             cursor.execute(
                 "INSERT INTO users(username, password) VALUES(?, ?)",
                 (username, password)
@@ -109,9 +120,37 @@ def signup():
 
         session['user'] = username
 
-        return redirect('/dashboard')
+        return redirect('/setup')
 
     return render_template('signup.html')
+
+# ---------------- SETUP ---------------- #
+
+@app.route('/setup', methods=['GET', 'POST'])
+def setup():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    if request.method == 'POST':
+
+        board = request.form['board']
+        class_name = request.form['class_name']
+
+        conn = sqlite3.connect("examora.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "UPDATE users SET board=?, class_name=? WHERE username=?",
+            (board, class_name, session['user'])
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect('/dashboard')
+
+    return render_template('setup.html')
 
 # ---------------- USER DASHBOARD ---------------- #
 

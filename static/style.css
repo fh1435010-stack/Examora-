@@ -136,3 +136,12 @@ button:hover{
     color:#00cfff;
     text-decoration:none;
 }
+select{
+    margin-bottom:15px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    color:white;
+    font-size:16px;
+}
