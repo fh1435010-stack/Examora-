@@ -1,0 +1,107 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Upload Paper - Examora</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+</head><body><div class="setup-container"><div class="setup-box">
+
+    <h1>Upload Paper</h1>
+
+    <form method="POST">
+
+        <select name="board" required>
+
+            <option value="">Select Board</option>
+
+            <option>FBISE</option>
+            <option>Punjab Board</option>
+            <option>Kohat Board</option>
+
+        </select>
+
+        <select name="class_name" required>
+
+            <option value="">Select Class</option>
+
+            <option>9</option>
+            <option>10</option>
+            <option>1st Year</option>
+            <option>2nd Year</option>
+
+        </select>
+
+        <select name="group_name" required>
+
+            <option value="">Select Group</option>
+
+            <option>Science Biology</option>
+            <option>Science Computer</option>
+            <option>Pre-Medical</option>
+            <option>Pre-Engineering</option>
+            <option>ICS</option>
+            <option>ICOM</option>
+            <option>FA Arts</option>
+            <option>Arts</option>
+
+        </select>
+
+        <input type="text"
+               name="subject"
+               placeholder="Subject"
+               required>
+
+        <input type="text"
+               name="paper_type"
+               placeholder="Paper Type (Annual/Supply)"
+               required>
+
+        <input type="text"
+               name="year"
+               placeholder="Year"
+               required>
+
+        <textarea name="mcqs"
+                  placeholder="Enter MCQs"
+                  rows="8"
+                  required></textarea>
+
+        <textarea name="mcq_answers"
+                  placeholder="Enter Correct MCQ Answers"
+                  rows="5"
+                  required></textarea>
+
+        <textarea name="short_questions"
+                  placeholder="Enter Short Questions"
+                  rows="8"
+                  required></textarea>
+
+        <textarea name="short_keywords"
+                  placeholder="Enter Short Question Keywords"
+                  rows="5"
+                  required></textarea>
+
+        <textarea name="long_questions"
+                  placeholder="Enter Long Questions"
+                  rows="8"
+                  required></textarea>
+
+        <textarea name="long_keywords"
+                  placeholder="Enter Long Question Keywords"
+                  rows="5"
+                  required></textarea>
+
+        <button type="submit">
+            Upload Paper
+        </button>
+
+    </form>
+
+</div>
+
+</div></body>
+</html>

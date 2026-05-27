@@ -11,6 +11,7 @@ def init_db():
     conn = sqlite3.connect("examora.db")
     cursor = conn.cursor()
 
+    # USERS TABLE
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,6 +20,25 @@ def init_db():
         board TEXT,
         class_name TEXT,
         group_name TEXT
+    )
+    """)
+
+    # PAPERS TABLE
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS papers(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        board TEXT,
+        class_name TEXT,
+        group_name TEXT,
+        subject TEXT,
+        paper_type TEXT,
+        year TEXT,
+        mcqs TEXT,
+        mcq_answers TEXT,
+        short_questions TEXT,
+        short_keywords TEXT,
+        long_questions TEXT,
+        long_keywords TEXT
     )
     """)
 
@@ -289,6 +309,78 @@ def profile():
         username=session['user']
     )
 
+# ---------------- UPLOAD PAPER ---------------- #
+
+@app.route('/upload_paper', methods=['GET', 'POST'])
+def upload_paper():
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    if request.method == 'POST':
+
+        board = request.form['board']
+        class_name = request.form['class_name']
+        group_name = request.form['group_name']
+        subject = request.form['subject']
+        paper_type = request.form['paper_type']
+        year = request.form['year']
+
+        mcqs = request.form['mcqs']
+        mcq_answers = request.form['mcq_answers']
+
+        short_questions = request.form['short_questions']
+        short_keywords = request.form['short_keywords']
+
+        long_questions = request.form['long_questions']
+        long_keywords = request.form['long_keywords']
+
+        conn = sqlite3.connect("examora.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO papers(
+                board,
+                class_name,
+                group_name,
+                subject,
+                paper_type,
+                year,
+                mcqs,
+                mcq_answers,
+                short_questions,
+                short_keywords,
+                long_questions,
+                long_keywords
+            )
+
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+
+            (
+                board,
+                class_name,
+                group_name,
+                subject,
+                paper_type,
+                year,
+                mcqs,
+                mcq_answers,
+                short_questions,
+                short_keywords,
+                long_questions,
+                long_keywords
+            )
+        )
+
+        conn.commit()
+        conn.close()
+
+        return "Paper Uploaded Successfully"
+
+    return render_template('upload_paper.html')
+
 # ---------------- ADMIN DASHBOARD ---------------- #
 
 @app.route('/admin')
@@ -297,7 +389,10 @@ def admin():
     if 'admin' not in session:
         return redirect('/login')
 
-    return render_template('admin.html')
+    return render_template(
+        'admin.html',
+        admin_name=session['admin']
+    )
 
 # ---------------- LOGOUT ---------------- #
 
