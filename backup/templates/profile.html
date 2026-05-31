@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Profile - Examora</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <h1 class="welcome">
+        🧑‍🚀 Profile
+    </h1>
+
+    <div class="leaderboard">
+
+        <div class="leader-item">
+            Username: {{ username }}
+        </div>
+
+        <div class="leader-item">
+            Profile System Coming Soon
+        </div>
+
+    </div>
+
+    <div class="bottom-buttons">
+
+        <a href="/logout" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <div class="bottom-nav">
+
+        <a href="/dashboard" class="nav-item">
+            📝
+            <span>Home</span>
+        </a>
+
+        <a href="/about" class="nav-item">
+            🎓
+            <span>About You</span>
+        </a>
+
+        <a href="/profile" class="nav-item active-nav">
+            🧑‍🚀
+            <span>Profile</span>
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

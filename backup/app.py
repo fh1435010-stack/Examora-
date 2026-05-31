@@ -308,53 +308,67 @@ def subject_page(subject_name):
         return redirect('/login')
 
     conn = sqlite3.connect("examora.db")
-    conn.row_factory = sqlite3.Row
     cursor = conn.cursor()
 
-    # =========================
-    # GET USER DATA SAFELY
-    # =========================
-    cursor.execute("""
+    cursor.execute(
+
+        """
+
         SELECT board, class_name, group_name
+
         FROM users
+
         WHERE username=?
-    """, (session['user'],))
+
+        """,
+
+        (session['user'],)
+
+    )
 
     user = cursor.fetchone()
 
-    if not user:
-        conn.close()
-        return "User not found", 404
+    board = user[0]
+    class_name = user[1]
+    group_name = user[2]
 
-    board = user['board']
-    class_name = user['class_name']
-    group_name = user['group_name']
+    cursor.execute(
 
-    # =========================
-    # FETCH PAPERS (SAFE MATCH)
-    # =========================
-    cursor.execute("""
+        """
+
         SELECT id, paper_type, year
+
         FROM papers
-        WHERE LOWER(TRIM(board)) = LOWER(TRIM(?))
-        AND LOWER(TRIM(class_name)) = LOWER(TRIM(?))
-        AND LOWER(TRIM(group_name)) = LOWER(TRIM(?))
-        AND LOWER(TRIM(subject)) = LOWER(TRIM(?))
-    """, (
-        board,
-        class_name,
-        group_name,
-        subject_name
-    ))
+
+        WHERE board=?
+        AND class_name=?
+        AND group_name=?
+        AND subject=?
+
+        """,
+
+        (
+
+            board,
+            class_name,
+            group_name,
+            subject_name
+
+        )
+
+    )
 
     papers = cursor.fetchall()
 
     conn.close()
 
     return render_template(
+
         'subject.html',
+
         subject_name=subject_name,
         papers=papers
+
     )
 
 # ---------------- TAKE EXAM ---------------- #
@@ -369,8 +383,11 @@ def take_exam(paper_id):
     cursor = conn.cursor()
 
     cursor.execute(
+
         "SELECT * FROM papers WHERE id=?",
+
         (paper_id,)
+
     )
 
     paper = cursor.fetchone()
@@ -380,17 +397,7 @@ def take_exam(paper_id):
     if not paper:
         return "Paper Not Found"
 
-    mcq_list = []
-
-    for line in paper[8].split('\n'):
-
-        line = line.strip()
-
-        if line:
-
-            parts = line.split('|')
-
-            mcq_list.append(parts)
+    mcqs = paper[8].split('\n')
 
     short_questions = paper[10].split('\n')
 
@@ -402,71 +409,11 @@ def take_exam(paper_id):
 
         paper=paper,
 
-        mcqs=mcq_list,
+        mcqs=mcqs,
         short_questions=short_questions,
         long_questions=long_questions
 
     )
-
-# ---------------- SUBMIT EXAM ---------------- #
-# ---------------- HELPERS ---------------- #
-
-def check_mcqs(user_answers, correct_answers):
-
-    score = 0
-
-    for i in range(len(correct_answers)):
-        if user_answers.get(f"mcq{i}") == correct_answers[i]:
-            score += 1
-
-    return score
-
-
-def check_short_answers(form_data, keywords_list):
-
-    score = 0
-
-    for i in range(len(keywords_list)):
-
-        user_answer = form_data.get(f"short{i}")
-
-        if not user_answer:
-            continue
-
-        user_answer = user_answer.lower()
-
-        keywords = keywords_list[i].split(',')
-
-        for keyword in keywords:
-            if keyword.strip().lower() in user_answer:
-                score += 1
-                break
-
-    return score
-
-
-def check_long_answers(form_data, keywords_list):
-
-    score = 0
-
-    for i in range(len(keywords_list)):
-
-        user_answer = form_data.get(f"long{i}")
-
-        if not user_answer:
-            continue
-
-        user_answer = user_answer.lower()
-
-        keywords = keywords_list[i].split(',')
-
-        for keyword in keywords:
-            if keyword.strip().lower() in user_answer:
-                score += 2   # long question weight
-                break
-
-    return score
-
 
 # ---------------- SUBMIT EXAM ---------------- #
 
@@ -479,94 +426,80 @@ def submit_exam(paper_id):
     conn = sqlite3.connect("examora.db")
     cursor = conn.cursor()
 
-    # ================= MCQs =================
     cursor.execute(
+
         "SELECT mcq_answers FROM papers WHERE id=?",
+
         (paper_id,)
+
     )
 
     data = cursor.fetchone()
 
-    if not data:
-        conn.close()
-        return "Paper not found", 404
+    correct_answers = data[0].split(',')
 
-    correct_mcqs = data[0].split(',')
-    total_mcqs = len(correct_mcqs)
+    total = len(correct_answers)
 
-    mcq_score = check_mcqs(request.form, correct_mcqs)
+    score = 0
 
-    # ================= SHORT QUESTIONS =================
+    for i in range(total):
+
+        student_answer = request.form.get(f"mcq{i}")
+
+        if student_answer:
+
+            if student_answer.strip().lower() == correct_answers[i].strip().lower():
+
+                score += 1
+
+    percentage = (score / total) * 100
+
     cursor.execute(
-        "SELECT short_keywords FROM papers WHERE id=?",
-        (paper_id,)
-    )
 
-    short_data = cursor.fetchone()
-
-    short_score = 0
-    total_short = 0
-
-    if short_data and short_data[0]:
-        short_keywords = short_data[0].split('|')
-        short_score = check_short_answers(request.form, short_keywords)
-        total_short = len(short_keywords)
-
-    # ================= LONG QUESTIONS =================
-    cursor.execute(
-        "SELECT long_keywords FROM papers WHERE id=?",
-        (paper_id,)
-    )
-
-    long_data = cursor.fetchone()
-
-    long_score = 0
-    total_long = 0
-
-    if long_data and long_data[0]:
-        long_keywords = long_data[0].split('|')
-        long_score = check_long_answers(request.form, long_keywords)
-        total_long = len(long_keywords)
-
-    # ================= FINAL SCORE =================
-    total_score = mcq_score + short_score + long_score
-    total_questions = total_mcqs + total_short + total_long
-
-    percentage = (total_score / total_questions) * 100 if total_questions > 0 else 0
-
-    # ================= SAVE RESULT =================
-    cursor.execute(
         """
+
         INSERT INTO results(
+
             username,
             paper_id,
+
             mcq_score,
             total_mcqs,
+
             percentage
+
         )
+
         VALUES(?, ?, ?, ?, ?)
+
         """,
+
         (
+
             session['user'],
             paper_id,
-            total_score,
-            total_questions,
+
+            score,
+            total,
+
             percentage
+
         )
+
     )
 
     conn.commit()
     conn.close()
 
     return render_template(
+
         'result.html',
-        score=total_score,
-        total=total_questions,
+
+        score=score,
+        total=total,
         percentage=percentage
+
     )
-
-
-
 
 # ---------------- UPLOAD PAPER ---------------- #
 

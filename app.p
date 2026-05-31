@@ -1,0 +1,498 @@
+from flask import Flask, render_template, request, redirect, session
+import sqlite3
+
+app = Flask(__name__)
+app.secret_key = "examora_secret_key"
+
+# ---------------- DATABASE ---------------- #
+
+def init_db():
+
+    conn = sqlite3.connect("examora.db")
+    cursor = conn.cursor()
+
+    # USERS TABLE
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE,
+        password TEXT,
+        board TEXT,
+        class_name TEXT,
+        group_name TEXT
+    )
+    """)
+
+    # PAPERS TABLE
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS papers(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        board TEXT,
+        class_name TEXT,
+        group_name TEXT,
+        subject TEXT,
+        paper_type TEXT,
+        year TEXT,
+        mcqs TEXT,
+        mcq_answers TEXT,
+        short_questions TEXT,
+        short_keywords TEXT,
+        long_questions TEXT,
+        long_keywords TEXT,
+        exam_time INTEGER
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+init_db()
+
+# ---------------- ADMIN ---------------- #
+
+ADMIN_NAME = "F@iZaN1952h@IeR"
+ADMIN_PASSWORD = "L@LAKbAR1952"
+
+# ---------------- SPLASH ---------------- #
+
+@app.route('/')
+def splash():
+
+    if "user" in session:
+        return redirect('/dashboard')
+
+    if "admin" in session:
+        return redirect('/admin')
+
+    return render_template('splash.html')
+
+# ---------------- LOGIN ---------------- #
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+
+    if request.method == 'POST':
+
+        username = request.form['username']
+        password = request.form['password']
+
+        # ADMIN LOGIN
+        if username == ADMIN_NAME and password == ADMIN_PASSWORD:
+
+            session['admin'] = username
+            return redirect('/admin')
+
+        # USER LOGIN
+        conn = sqlite3.connect("examora.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT * FROM users WHERE username=? AND password=?",
+            (username, password)
+        )
+
+        user = cursor.fetchone()
+
+        conn.close()
+
+        if user:
+
+            session['user'] = username
+
+            if user[3] is None or user[4] is None or user[5] is None:
+                return redirect('/setup')
+
+            return redirect('/dashboard')
+
+        return "Invalid Username or Password"
+
+    return render_template('login.html')
+
+# ---------------- SIGNUP ---------------- #
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+
+    if request.method == 'POST':
+
+        username = request.form['username']
+        password = request.form['password']
+        confirm = request.form['confirm']
+
+        if password != confirm:
+            return "Passwords do not match"
+
+        conn = sqlite3.connect("examora.db")
+        cursor = conn.cursor()
+
+        try:
+
+            cursor.execute(
+                "INSERT INTO users(username, password) VALUES(?, ?)",
+                (username, password)
+            )
+
+            conn.commit()
+
+        except:
+            conn.close()
+            return "Username already exists"
+
+        conn.close()
+
+        session['user'] = username
+
+        return redirect('/setup')
+
+    return render_template('signup.html')
+
+# ---------------- SETUP ---------------- #
+
+@app.route('/setup', methods=['GET', 'POST'])
+def setup():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    if request.method == 'POST':
+
+        board = request.form['board']
+        class_name = request.form['class_name']
+        group_name = request.form['group_name']
+
+        conn = sqlite3.connect("examora.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "UPDATE users SET board=?, class_name=?, group_name=? WHERE username=?",
+            (board, class_name, group_name, session['user'])
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect('/dashboard')
+
+    return render_template('setup.html')
+
+# ---------------- USER DASHBOARD ---------------- #
+
+@app.route('/dashboard')
+def dashboard():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    conn = sqlite3.connect("examora.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT board, class_name, group_name FROM users WHERE username=?",
+        (session['user'],)
+    )
+
+    data = cursor.fetchone()
+
+    conn.close()
+
+    board = data[0]
+    class_name = data[1]
+    group_name = data[2]
+
+    subjects = [
+        "English",
+        "Urdu",
+        "Islamiat",
+        "Pakistan Studies"
+    ]
+
+    if group_name == "Science Biology":
+
+        subjects += [
+            "Physics",
+            "Chemistry",
+            "Biology",
+            "Mathematics"
+        ]
+
+    elif group_name == "Science Computer":
+
+        subjects += [
+            "Physics",
+            "Chemistry",
+            "Computer Science",
+            "Mathematics"
+        ]
+
+    return render_template(
+        'dashboard.html',
+        username=session['user'],
+        board=board,
+        class_name=class_name,
+        group_name=group_name,
+        subjects=subjects
+    )
+
+# ---------------- ABOUT PAGE ---------------- #
+
+@app.route('/about')
+def about():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    return render_template('about.html')
+
+# ---------------- PROFILE PAGE ---------------- #
+
+@app.route('/profile')
+def profile():
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    return render_template(
+        'profile.html',
+        username=session['user']
+    )
+
+# ---------------- UPLOAD PAPER ---------------- #
+
+@app.route('/upload_paper', methods=['GET', 'POST'])
+def upload_paper():
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    if request.method == 'POST':
+
+        board = request.form['board']
+        class_name = request.form['class_name']
+        group_name = request.form['group_name']
+        subject = request.form['subject']
+        paper_type = request.form['paper_type']
+        year = request.form['year']
+
+        mcqs = request.form['mcqs']
+        mcq_answers = request.form['mcq_answers']
+
+        short_questions = request.form['short_questions']
+        short_keywords = request.form['short_keywords']
+
+        long_questions = request.form['long_questions']
+        long_keywords = request.form['long_keywords']
+
+        exam_time = request.form['exam_time']
+
+        conn = sqlite3.connect("examora.db")
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO papers(
+                board,
+                class_name,
+                group_name,
+                subject,
+                paper_type,
+                year,
+                mcqs,
+                mcq_answers,
+                short_questions,
+                short_keywords,
+                long_questions,
+                long_keywords,
+                exam_time
+            )
+
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+
+            (
+                board,
+                class_name,
+                group_name,
+                subject,
+                paper_type,
+                year,
+                mcqs,
+                mcq_answers,
+                short_questions,
+                short_keywords,
+                long_questions,
+                long_keywords,
+                exam_time
+            )
+        )
+
+        conn.commit()
+        conn.close()
+
+        return "Paper Uploaded Successfully"
+
+    return render_template('upload_paper.html')
+
+# ---------------- SUBJECT PAGE ---------------- #
+
+@app.route('/subject/<subject_name>')
+def subject_page(subject_name):
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    conn = sqlite3.connect("examora.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT board, class_name, group_name
+        FROM users
+        WHERE username=?
+        """,
+        (session['user'],)
+    )
+
+    user_data = cursor.fetchone()
+
+    board = user_data[0]
+    class_name = user_data[1]
+    group_name = user_data[2]
+
+    cursor.execute(
+        """
+        SELECT id, paper_type, year
+        FROM papers
+        WHERE
+        board=?
+        AND class_name=?
+        AND group_name=?
+        AND subject=?
+        """,
+        (
+            board,
+            class_name,
+            group_name,
+            subject_name
+        )
+    )
+
+    papers = cursor.fetchall()
+
+    conn.close()
+
+    return render_template(
+        'subject.html',
+        subject_name=subject_name,
+        papers=papers
+    )
+
+# ---------------- TAKE EXAM ---------------- #
+
+@app.route('/take_exam/<int:paper_id>')
+def take_exam(paper_id):
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    conn = sqlite3.connect("examora.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM papers
+        WHERE id=?
+        """,
+        (paper_id,)
+    )
+
+    paper = cursor.fetchone()
+
+    conn.close()
+
+    if not paper:
+        return "Paper Not Found"
+
+    mcqs = paper[7].split('\n')
+
+    return render_template(
+        'take_exam.html',
+        paper=paper,
+        mcqs=mcqs
+    )
+
+# ---------------- SUBMIT EXAM ---------------- #
+
+@app.route('/submit_exam/<int:paper_id>', methods=['POST'])
+def submit_exam(paper_id):
+
+    if 'user' not in session:
+        return redirect('/login')
+
+    conn = sqlite3.connect("examora.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        """
+        SELECT mcq_answers
+        FROM papers
+        WHERE id=?
+        """,
+        (paper_id,)
+    )
+
+    data = cursor.fetchone()
+
+    conn.close()
+
+    correct_answers = data[0].split(',')
+
+    total = len(correct_answers)
+
+    score = 0
+
+    for i in range(total):
+
+        student_answer = request.form.get(f"mcq{i}")
+
+        if student_answer:
+
+            if student_answer.strip().lower() == correct_answers[i].strip().lower():
+
+                score += 1
+
+    percentage = round((score / total) * 100, 2)
+
+    return render_template(
+        'result.html',
+        score=score,
+        total=total,
+        percentage=percentage
+    )
+
+# ---------------- ADMIN DASHBOARD ---------------- #
+
+@app.route('/admin')
+def admin():
+
+    if 'admin' not in session:
+        return redirect('/login')
+
+    return render_template(
+        'admin.html',
+        admin_name=session['admin']
+    )
+
+# ---------------- LOGOUT ---------------- #
+
+@app.route('/logout')
+def logout():
+
+    session.clear()
+
+    return redirect('/login')
+
+# ---------------- RUN ---------------- #
+
+if __name__ == '__main__':
+    app.run(debug=True)

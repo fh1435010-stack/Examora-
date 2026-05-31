@@ -1,0 +1,57 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Admin Dashboard - Examora</title>
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}">
+
+</head><body><div class="dashboard"><div class="top-card">
+
+    <div>
+
+        <h1 class="welcome">
+            Admin Panel
+        </h1>
+
+        <p class="academic-info">
+            Welcome {{ admin_name }}
+        </p>
+
+    </div>
+
+    <img src="{{ url_for('static', filename='logo.png') }}"
+         class="dashboard-logo">
+
+</div>
+
+<h2 class="section-title">
+    Admin Controls
+</h2>
+
+<div class="subjects-grid">
+
+    <a href="/upload_paper"
+       class="subject-card">
+
+       Upload Paper
+
+    </a>
+
+</div>
+
+<div class="bottom-buttons">
+
+    <a href="/logout"
+       class="logout-btn">
+
+       Logout
+
+    </a>
+
+</div>
+
+</div></body>
+</html>
