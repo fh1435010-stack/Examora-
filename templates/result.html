@@ -21,11 +21,14 @@
 
 <div class="dashboard">
 
+<div class="result-container">
+
     <!-- RESULT TITLE -->
 
     <h1 class="section-title">
         Exam Result
     </h1>
+    
 
     <!-- SCORE CARD -->
 
@@ -92,7 +95,97 @@
         </div>
 
     {% endif %}
+<div class="result-card">
 
+    <h2>📊 Marks Breakdown</h2>
+
+    <p>
+        MCQs:
+        {{ mcq_score }}/{{ total_mcqs }}
+    </p>
+
+    <p>
+        Short Questions:
+        {{ short_score }}/{{ total_short }}
+    </p>
+
+    <p>
+        Long Questions:
+        {{ long_score }}/{{ total_long }}
+    </p>
+
+    <hr>
+
+    <p>
+        <strong>
+            Total:
+            {{ score }}/{{ total }}
+        </strong>
+    </p>
+
+</div>
+<div class="subject-card">
+
+{% if level == "excellent" %}
+
+<h2>🏆 Excellent Performance</h2>
+<p>You are performing at a very high level. Keep it up!</p>
+
+{% elif level == "average" %}
+
+<h2>⭐ Good Performance</h2>
+<p>You are on the right track. Stay consistent.</p>
+
+{% elif level == "weak" %}
+
+<h2>📘 Improvement Needed</h2>
+<p>You have potential. Focus on weak topics.</p>
+
+{% else %}
+
+<h2>🚨 Critical Level</h2>
+<p>Start revision from basics and practice daily.</p>
+
+{% endif %}
+
+</div>
+
+<div class="subject-card">
+
+<h2>🔥 Motivation</h2>
+
+{% if level == "excellent" %}
+
+<p>"Excellence is not an act, it is a habit."</p>
+
+{% elif level == "average" %}
+
+<p>"Consistency turns effort into achievement."</p>
+
+{% elif level == "weak" %}
+
+<p>"Every expert was once a beginner."</p>
+
+{% else %}
+
+<p>"Small progress every day becomes big success."</p>
+
+{% endif %}
+
+</div>
+<div class="subject-card">
+
+<h2>⏱️ Exam Statistics</h2>
+
+<p>✅ Correct Score: {{ score }}</p>
+
+<p>📊 Total Marks: {{ total }}</p>
+
+<p>🎯 Percentage: {{ "%.2f"|format(percentage) }}%</p>
+
+<p>🏅 Level: {{ level }}</p>
+
+</div>
     <br>
 
     <!-- GRAPH -->
@@ -101,57 +194,66 @@
 
         <canvas id="resultChart"></canvas>
 
+<div class="top-card">
+
+<h3>📊 Performance Overview</h3>
+
+<div style="background:#334155; border-radius:10px; height:20px; width:100%;">
+    <div style="height:20px; width:{{ percentage }}%; background:#22c55e; border-radius:10px;"></div>
+</div>
+
+<p>{{ "%.2f"|format(percentage) }}% Score</p>
+
+</div>
     </div>
 
     <br>
-
-    <!-- IMPROVEMENT TIPS -->
 
     <div class="subject-card">
 
-        <h2>
-            Improvement Tips
-        </h2>
+<h2>🎯 Improvement Tips</h2>
 
-        <ul>
+{% if level == "critical" %}
 
-            <li>
-                Revise difficult chapters daily.
-            </li>
+<ul>
+    <li>Start from basics.</li>
+    <li>Study one chapter daily.</li>
+    <li>Make a revision timetable.</li>
+    <li>Focus on textbook concepts.</li>
+</ul>
 
-            <li>
-                Practice MCQs regularly.
-            </li>
+{% elif level == "weak" %}
 
-            <li>
-                Improve time management.
-            </li>
+<ul>
+    <li>Practice short questions daily.</li>
+    <li>Revise notes regularly.</li>
+    <li>Solve chapter exercises.</li>
+    <li>Improve concept clarity.</li>
+</ul>
 
-            <li>
-                Solve past papers weekly.
-            </li>
+{% elif level == "average" %}
 
-        </ul>
+<ul>
+    <li>Focus on weak topics.</li>
+    <li>Attempt past papers.</li>
+    <li>Improve answer presentation.</li>
+    <li>Increase solving speed.</li>
+</ul>
 
-    </div>
+{% else %}
 
-    <br>
+<ul>
+    <li>Maintain consistency.</li>
+    <li>Attempt challenging questions.</li>
+    <li>Focus on accuracy.</li>
+    <li>Keep revising regularly.</li>
+</ul>
 
-    <!-- MOTIVATIONAL QUOTE -->
+{% endif %}
 
-    <div class="subject-card">
+</div>
 
-        <h2>
-            Motivation
-        </h2>
 
-        <p>
-            “Small progress every day becomes big success.”
-        </p>
-
-    </div>
-
-    <br>
 
     <!-- BACK BUTTON -->
 

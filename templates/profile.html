@@ -1,71 +1,260 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Identity Console</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #030712;
+            --card-dark: #0b1329;
+            --neon-cyan: #00f0ff;
+            --neon-blue: #38bdf8;
+            --neon-purple: #a855f7;
+            --neon-green: #22c55e;
+            --neon-orange: #f97316;
+            --text-main: #f3f4f6;
+            --text-gray: #9ca3af;
+            --text-dim: #4b5563;
+            --blue-glow: rgba(56, 189, 248, 0.12);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px 16px 95px 16px;
+        }
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+        /* IDENTITY HEADER BOX */
+        .profile-card { 
+            background: linear-gradient(135deg, #0b1528 0%, #040814 100%); 
+            border: 1px solid rgba(56,189,248,0.1); 
+            border-radius: 16px; 
+            padding: 20px; 
+            text-align: center; 
+            margin-bottom: 22px; 
+            position: relative; 
+        }
+        .avatar-container { position: relative; width: 76px; height: 76px; margin: 0 auto 12px auto; }
+        .avatar-frame { width: 100%; height: 100%; background: #0f172a; border: 2px solid var(--neon-blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 800; color: #ffffff; box-shadow: 0 0 14px var(--blue-glow); }
+        .edit-avatar-badge { position: absolute; bottom: 0; right: 0; width: 24px; height: 24px; background: var(--neon-cyan); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000000; font-size: 11px; cursor: pointer; border: 2px solid var(--bg-dark); }
+        .profile-title { font-size: 18px; font-weight: 800; letter-spacing: -0.3px; }
+        .profile-subtitle { font-size: 11px; color: var(--neon-blue); font-weight: 700; text-transform: uppercase; margin-top: 3px; letter-spacing: 0.5px; }
 
-    <title>Profile - Examora</title>
+        .section-title { font-size: 12px; font-weight: 800; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.8px; margin: 20px 0 10px 4px; display: flex; align-items: center; gap: 8px; }
+        .section-title i { color: var(--neon-cyan); font-size: 13px; }
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+        /* INTERACTIVE INPUT MANAGEMENT PANELS */
+        .console-box { background: var(--card-dark); border: 1px solid rgba(255,255,255,0.03); border-radius: 14px; padding: 14px; margin-bottom: 20px; }
+        .input-group { margin-bottom: 12px; }
+        .input-group:last-child { margin-bottom: 0; }
+        .input-label { font-size: 10px; font-weight: 700; color: var(--text-gray); text-transform: uppercase; margin-bottom: 5px; display: block; }
+        .input-wrapper { display: flex; align-items: center; background: #0f172a; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 0 12px; gap: 10px; }
+        .input-wrapper i { font-size: 12px; color: var(--text-dim); }
+        .input-wrapper input { background: none; border: none; color: #ffffff; font-size: 12px; width: 100%; outline: none; font-weight: 600; padding: 10px 0; }
 
+        .action-submit-btn { width: 100%; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); color: var(--neon-blue); padding: 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; outline: none; transition: all 0.2s ease; }
+        .action-submit-btn:active { background: var(--neon-blue); color: #000000; }
+
+        /* WEAK TOPICS DATA LOGGER STATUS BARS */
+        .weak-topic-row { margin-bottom: 12px; }
+        .weak-topic-row:last-child { margin-bottom: 0; }
+        .weak-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; margin-bottom: 4px; }
+        .weak-label { color: #ffffff; }
+        .weak-pct { color: var(--neon-orange); }
+        .bar-outer { width: 100%; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px; overflow: hidden; }
+        .bar-inner { height: 100%; background: linear-gradient(90deg, #f97316, #ef4444); border-radius: 3px; }
+
+        /* STRATEGIC STUDY CHALLENGE MAP PLAN TILES */
+        .plan-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 12px; background: rgba(0,0,0,0.2); padding: 4px; border-radius: 8px; }
+        .plan-btn { background: none; border: none; padding: 8px 2px; border-radius: 6px; color: var(--text-gray); font-size: 9px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all 0.15s ease; }
+        .plan-btn.active { background: var(--card-dark); color: var(--neon-cyan); border: 1px solid rgba(0,240,255,0.1); }
+        .plan-content-display { font-size: 11px; color: var(--text-gray); line-height: 1.4; font-weight: 500; display: flex; align-items: flex-start; gap: 10px; background: #0f172a; padding: 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.02); }
+
+        /* LOG ENTRY DATA STRIPS */
+        .log-strip { display: flex; justify-content: space-between; align-items: center; padding: 10px 4px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .log-strip:last-child { border-bottom: none; }
+        .log-main { font-weight: 700; color: #ffffff; font-size: 12px; display: block; }
+        .log-sub { font-size: 9px; color: var(--text-dim); margin-top: 1px; display: block; }
+        .log-badge { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.15); color: var(--neon-green); font-size: 11px; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+
+        /* PREMIUM DOCK EXIT TERMINAL BUTTON */
+        .logout-container { margin: 24px 4px 10px 4px; }
+        .logout-btn { width: 100%; background: rgba(239, 68, 68, 0.06); border: 1px solid rgba(239, 68, 68, 0.2); color: #f87171; padding: 12px; border-radius: 10px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .logout-btn:active { background: #ef4444; color: #ffffff; border-color: #ef4444; }
+
+        /* HUD DOCK FOOTER */
+        .nav-dock { position: fixed; bottom: 0; left: 0; width: 100%; background: #070c18; border-top: 1px solid rgba(255, 255, 255, 0.06); display: flex; justify-content: space-around; padding: 8px 0; box-shadow: 0 -4px 20px rgba(0,0,0,0.4); z-index: 100; }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: var(--text-gray); text-decoration: none; font-size: 10px; font-weight: 600; gap: 3px; }
+        .nav-link.active { color: var(--neon-blue); }
+        .nav-link i { font-size: 16px; }
+    </style>
 </head>
-
 <body>
 
-<div class="dashboard">
+    <input type="file" id="gallery_picker_input" style="display: none;" accept="image/*" onchange="uploadSelectedGalleryImage()">
 
-    <h1 class="welcome">
-        🧑‍🚀 Profile
-    </h1>
-
-    <div class="leaderboard">
-
-        <div class="leader-item">
-            Username: {{ username }}
+    <div class="profile-card">
+        <div class="avatar-container" onclick="openPhoneGallerySelector()" style="cursor: pointer;">
+            <div class="avatar-frame" id="avatar_display_frame" style="overflow: hidden;">
+                {% if profile_picture %}
+                    <img src="{{ profile_picture }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                {% else %}
+                    {{ username[0].upper() }}
+                {% endif %}
+            </div>
+            <div class="edit-avatar-badge"><i class="fa-solid fa-camera"></i></div>
         </div>
 
-        <div class="leader-item">
-            Profile System Coming Soon
-        </div>
-
+        <div class="profile-title">{{ username }}</div>
+        <div class="profile-subtitle">{{ board }} • {{ class_name }}</div>
     </div>
 
-    <div class="bottom-buttons">
+    <div class="section-title"><i class="fa-solid fa-user-gear"></i> Account Configuration</div>
+    <div class="console-box">
+        <form action="/update_profile" method="POST">
+            <div class="input-group">
+                <label class="input-label">Update Identity Name</label>
+                <div class="input-wrapper">
+                    <i class="fa-regular fa-id-card"></i>
+                    <input type="text" name="display_name" value="{{ username }}" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label class="input-label">Modify Security Password</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" name="new_password" placeholder="••••••••" required>
+                </div>
+            </div>
+            <button type="submit" class="action-submit-btn">Commit Changes</button>
+        </form>
+    </div>
 
+    <div class="section-title"><i class="fa-solid fa-triangle-exclamation"></i> AI Weak Concept Diagnostics</div>
+    <div class="console-box">
+        {% if weak_topics %}
+            {% for topic in weak_topics %}
+            <div class="weak-topic-row">
+                <div class="weak-meta">
+                    <span class="weak-label">{{ topic.name }}</span>
+                    <span class="weak-pct">{{ topic.accuracy }}% Accuracy</span>
+                </div>
+                <div class="bar-outer">
+                    <div class="bar-inner" style="width: {{ topic.accuracy }}%;"></div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; font-size: 11px; color: var(--text-dim); padding: 10px 0; font-weight: 600;">
+                <i class="fa-solid fa-circle-check" style="display:block; margin-bottom:6px; font-size:14px; color: var(--neon-green);"></i> No weak topics identified yet
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-calendar-check"></i> Personal Study Blueprint</div>
+    <div class="console-box">
+        <div class="plan-tabs">
+            <button class="plan-btn active" onclick="switchPlan('daily', this)">Daily</button>
+            <button class="plan-btn" onclick="switchPlan('weekly', this)">Weekly</button>
+            <button class="plan-btn" onclick="switchPlan('monthly', this)">Monthly</button>
+            <button class="plan-btn" onclick="switchPlan('yearly', this)">Yearly</button>
+        </div>
+        <div class="plan-content-display">
+            <i class="fa-solid fa-circle-nodes" style="color: var(--neon-cyan); font-size: 14px; margin-top: 1px;"></i>
+            <span id="plan-text">Loading personalized roadmap strategy...</span>
+        </div>
+    </div>
+
+    <div class="section-title"><i class="fa-solid fa-database"></i> Core Verification Exam Logs</div>
+    <div class="console-box">
+        {% if history %}
+            {% for item in history %}
+            <div class="log-strip">
+                <div>
+                    <span class="log-main">{{ item.subject }}</span>
+                    <span class="log-sub">{{ item.paper_type }} • {{ item.date }}</span>
+                </div>
+                <div class="log-badge">{{ item.percentage }}% Logged</div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div style="text-align: center; font-size: 11px; color: var(--text-dim); padding: 14px 0; font-weight: 600;">
+                <i class="fa-solid fa-folder-open" style="display:block; margin-bottom:6px; font-size:14px;"></i> No synced metric datasets currently exit
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="logout-container">
         <a href="/logout" class="logout-btn">
-            Logout
+            <i class="fa-solid fa-power-off"></i>
+            <span>Disconnect Secure Session</span>
         </a>
-
     </div>
 
-    <!-- BOTTOM NAVIGATION -->
+    <nav class="nav-dock">
+        <a href="/dashboard" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Console</span></a>
+        <a href="/leaderboard" class="nav-link"><i class="fa-solid fa-ranking-star"></i><span>Rankings</span></a>
+        <a href="/profile" class="nav-link active"><i class="fa-solid fa-sliders"></i><span>Identity</span></a>
+    </nav>
 
-    <div class="bottom-nav">
+    <script>
+        // Directly maps the backend calculated runtime object tracking arrays
+        const maps = {
+            daily: "{{ study_plans.daily | safe }}",
+            weekly: "{{ study_plans.weekly | safe }}",
+            monthly: "{{ study_plans.monthly | safe }}",
+            yearly: "{{ study_plans.yearly | safe }}"
+        };
 
-        <a href="/dashboard" class="nav-item">
-            📝
-            <span>Home</span>
-        </a>
+        function switchPlan(type, element) {
+            document.querySelectorAll('.plan-btn').forEach(b => b.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('plan-text').innerText = maps[type];
+        }
 
-        <a href="/about" class="nav-item">
-            🎓
-            <span>About You</span>
-        </a>
+        // Initialize view map state cleanly on application render loads
+        window.onload = function() {
+            const defaultActiveTab = document.querySelector('.plan-btn.active');
+            if (defaultActiveTab) {
+                defaultActiveTab.click();
+            }
+        };
 
-        <a href="/profile" class="nav-item active-nav">
-            🧑‍🚀
-            <span>Profile</span>
-        </a>
+        function openPhoneGallerySelector() {
+            document.getElementById('gallery_picker_input').click();
+        }
 
-    </div>
+        function uploadSelectedGalleryImage() {
+            const fileInput = document.getElementById('gallery_picker_input');
+            if (!fileInput.files || !fileInput.files[0]) return;
 
-</div>
+            const targetFile = fileInput.files[0];
+            const dataPayload = new FormData();
+            dataPayload.append('profile_pic', targetFile);
+
+            fetch('/upload_profile_picture', {
+                method: 'POST',
+                body: dataPayload
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const frame = document.getElementById('avatar_display_frame');
+                    frame.innerHTML = `<img src="${data.filepath}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                } else {
+                    alert("Upload Failed: " + data.error);
+                }
+            })
+            .catch(error => {
+                console.error("Transmission stream interrupted:", error);
+                alert("Network communication error during image save.");
+            });
+        }
+    </script>
 
 </body>
-
 </html>
+

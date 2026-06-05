@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Rankings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #030712;
+            --card-dark: #0b1329;
+            --neon-cyan: #00f0ff;
+            --neon-blue: #38bdf8;
+            --text-main: #f3f4f6;
+            --text-gray: #9ca3af;
+            --text-dim: #4b5563;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px 16px 90px 16px;
+        }
+        .header { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .header h2 { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* 2 OPTION NAVIGATION TABS FROM BLUEPRINT MAP */
+        .filter-tabs { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 18px; background: rgba(255,255,255,0.02); padding: 4px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.04); }
+        .tab-btn { background: none; border: none; padding: 10px; border-radius: 8px; color: var(--text-gray); font-size: 11px; font-weight: 700; text-align: center; cursor: pointer; text-transform: uppercase; letter-spacing: 0.3px; transition: 0.2s; }
+        .tab-btn.active { background: var(--card-dark); color: var(--neon-cyan); border: 1px solid rgba(0,240,255,0.15); box-shadow: 0 0 10px rgba(0,240,255,0.05); }
+
+        .leaderboard-container { background: var(--card-dark); border-radius: 16px; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.03); }
+        .leaderboard-list { display: none; }
+        .leaderboard-list.active-list { display: block; }
+        
+        .student-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 6px; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+        .student-row:last-child { border-bottom: none; }
+        .left-side { display: flex; align-items: center; gap: 12px; }
+
+        .position-wrapper { display: flex; align-items: center; justify-content: center; width: 26px; position: relative; }
+        .position-number { font-weight: 900; font-size: 14px; text-align: center; }
+        .pos-1 { color: #f59e0b; }
+        .pos-2 { color: #38bdf8; }
+        .pos-3 { color: #a855f7; }
+        .pos-other { color: var(--text-dim); }
+
+        /* SMALL MEDAL DECORATION FOR TOP 10 POSITIONS */
+        .medal-icon { font-size: 10px; position: absolute; top: -6px; right: -4px; filter: drop-shadow(0 0 4px rgba(255,215,0,0.6)); }
+
+        /* ROW IMAGE PROFILE AVATAR SLOTS */
+        .row-avatar { width: 34px; height: 34px; border-radius: 50%; background: #0f172a; border: 1px solid rgba(56, 189, 248, 0.2); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; color: #ffffff; overflow: hidden; }
+        .row-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .student-name { font-weight: 700; color: #ffffff; display: block; font-size: 13px; }
+        .student-meta { font-size: 10px; color: var(--text-gray); font-weight: 500; margin-top: 1px; }
+        .score-badge { font-weight: 800; color: var(--neon-cyan); font-size: 13px; letter-spacing: -0.2px; }
+
+        .nav-dock { position: fixed; bottom: 0; left: 0; width: 100%; background: #070c18; border-top: 1px solid rgba(255, 255, 255, 0.06); display: flex; justify-content: space-around; padding: 12px 0; z-index: 999; backdrop-filter: blur(10px); }
+        .nav-link { display: flex; flex-direction: column; align-items: center; color: var(--text-gray); text-decoration: none; font-size: 10px; font-weight: 600; gap: 4px; }
+        .nav-link.active { color: var(--neon-blue); }
+        .nav-link i { font-size: 16px; }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER TITLE TERMINOLOGY MATCHING YOUR SPECIFICATION -->
+    <div class="header">
+        <i class="fa-solid fa-ranking-star" style="color: var(--neon-blue); font-size: 18px;"></i>
+        <h2>Position Matrix</h2>
+    </div>
+
+    <!-- DOUBLE FILTER SELECTION CHIPS FROM NOTEBOOK BLUEPRINT -->
+    <div class="filter-tabs">
+        <button id="btn-board" class="tab-btn" onclick="toggleView('board')">In Your Board</button>
+        <button id="btn-national" class="tab-btn active" onclick="toggleView('national')">National Level</button>
+    </div>
+
+    <div class="leaderboard-container">
+        
+        <!-- DATA MATRIX VIEW A: BOARD LEVEL -->
+        <div id="list-board" class="leaderboard-list">
+            {% if board_list %}
+                {% for student in board_list %}
+                <div class="student-row">
+                    <div class="left-side">
+                        <div class="position-wrapper">
+                            <span class="position-number {% if student.position == 1 %}pos-1{% elif student.position == 2 %}pos-2{% elif student.position == 3 %}pos-3{% else %}pos-other{% endif %}">
+                                {{ student.position }}
+                            </span>
+                            {% if student.position <= 10 %}
+                                <i class="fa-solid fa-medal medal-icon" style="color: #ffd700;"></i>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row-avatar">
+                            {% if student.profile_picture %}
+                                <img src="{{ student.profile_picture }}">
+                            {% else %}
+                                {{ student.username[0].upper() }}
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <span class="student-name">{{ student.username }}</span>
+                            <span class="student-meta">{{ student.board }} • Class {{ student.class_name }}</span>
+                        </div>
+                    </div>
+                    <div class="score-badge">
+                        {{ student.total_marks }} <span style="font-size: 9px; color: var(--text-dim); font-weight: 500; text-transform: uppercase;">Pts</span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; font-size: 11px; color: var(--text-dim); padding: 20px 0;">No board tracking data available</div>
+            {% endif %}
+        </div>
+
+        <!-- DATA MATRIX VIEW B: NATIONAL LEVEL -->
+        <div id="list-national" class="leaderboard-list active-list">
+            {% if national_list %}
+                {% for student in national_list %}
+                <div class="student-row">
+                    <div class="left-side">
+                        <div class="position-wrapper">
+                            <span class="position-number {% if student.position == 1 %}pos-1{% elif student.position == 2 %}pos-2{% elif student.position == 3 %}pos-3{% else %}pos-other{% endif %}">
+                                {{ student.position }}
+                            </span>
+                            {% if student.position <= 10 %}
+                                <i class="fa-solid fa-medal medal-icon" style="color: #ffd700;"></i>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="row-avatar">
+                            {% if student.profile_picture %}
+                                <img src="{{ student.profile_picture }}">
+                            {% else %}
+                                {{ student.username[0].upper() }}
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <span class="student-name">{{ student.username }}</span>
+                            <span class="student-meta">{{ student.board }} • Class {{ student.class_name }}</span>
+                        </div>
+                    </div>
+                    <div class="score-badge">
+                        {{ student.total_marks }} <span style="font-size: 9px; color: var(--text-dim); font-weight: 500; text-transform: uppercase;">Pts</span>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; font-size: 11px; color: var(--text-dim); padding: 20px 0;">No national tracking data available</div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <nav class="nav-dock">
+        <a href="/dashboard" class="nav-link"><i class="fa-solid fa-chart-pie"></i><span>Console</span></a>
+        <a href="/leaderboard" class="nav-link active"><i class="fa-solid fa-ranking-star"></i><span>Rankings</span></a>
+        <a href="/profile" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Identity</span></a>
+    </nav>
+
+    <script>
+        // High-precision layout tab toggles switching between pristine backend lists
+        function toggleView(mode) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.leaderboard-list').forEach(list => list.classList.remove('active-list'));
+
+            if (mode === 'board') {
+                document.getElementById('btn-board').classList.add('active');
+                document.getElementById('list-board').classList.add('active-list');
+            } else {
+                document.getElementById('btn-national').classList.add('active');
+                document.getElementById('list-national').classList.add('active-list');
+            }
+        }
+    </script>
+
+</body>
+</html>
+

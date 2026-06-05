@@ -100,7 +100,6 @@ Loading...
 
 <form action="/submit_exam/{{ paper[0] }}"
 method="POST">
-
 <!-- ================= MCQS ================= -->
 
 <div id="mcq-page">
@@ -183,7 +182,7 @@ Q{{ loop.index }}
 (b) {{ q[1] }}
 </p>
 {% endif %}<textarea
-name="short{{ loop.index }}"
+name="short{{ loop.index0 }}"
 rows="5"
 placeholder="Write Answer Here..."></textarea></div>{% endfor %}
 
@@ -219,12 +218,13 @@ Q{{ loop.index }}
 (b) {{ q[1] }}
 </p>
 {% endif %}<textarea
-name="long{{ loop.index }}"
+name="long{{ loop.index0 }}"
 rows="10"
 placeholder="Write Long Answer Here..."></textarea></div>{% endfor %}
 
 <button type="submit"
-class="start-btn">
+class="start-btn"
+id="submitBtn">
 
 Submit Paper
 
@@ -237,7 +237,6 @@ Submit Paper
 </div>
 
 <script>
-
 /* TIMER */
 
 let time = {{ paper[7] }} * 60;
@@ -273,22 +272,44 @@ document.forms[0].submit();
 
 function showShortPage(){
 
-document.getElementById("mcq-page").classList.add("hidden");
+const mcq = document.getElementById("mcq-page");
+const shortPage = document.getElementById("short-page");
 
-document.getElementById("short-page").classList.remove("hidden");
+if(mcq && shortPage){
+
+mcq.style.display = "none";
+shortPage.style.display = "block";
+
+window.scrollTo(0,0);
+
+}
 
 }
 
 function showLongPage(){
 
-document.getElementById("short-page").classList.add("hidden");
+const shortPage = document.getElementById("short-page");
+const longPage = document.getElementById("long-page");
 
-document.getElementById("long-page").classList.remove("hidden");
+if(shortPage && longPage){
+
+shortPage.style.display = "none";
+longPage.style.display = "block";
+
+window.scrollTo(0,0);
 
 }
 
+}
+document.forms[0].addEventListener("submit", function(){
+
+const btn = document.getElementById("submitBtn");
+
+btn.disabled = true;
+btn.innerHTML = "Submitting Paper...";
+
+});
 </script>
 
 </body>
 </html>
-

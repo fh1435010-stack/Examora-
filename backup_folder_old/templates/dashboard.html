@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - Examora</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- TOP SECTION -->
+
+    <div class="top-card">
+
+        <div>
+
+            <h1 class="welcome">
+                Welcome, {{ username }}
+            </h1>
+
+            <p class="academic-info">
+                {{ board }} • {{ class_name }}
+            </p>
+
+            <p class="academic-info">
+                {{ group_name }}
+            </p>
+
+        </div>
+
+        <img src="{{ url_for('static', filename='logo.png') }}"
+             class="dashboard-logo">
+
+    </div>
+
+    <!-- SUBJECT SECTION -->
+
+    <h2 class="section-title">
+        Subjects
+    </h2>
+
+    <div class="subjects-grid">
+
+        {% for subject in subjects %}
+
+        <a href="/subject/{{ subject }}"
+           class="subject-card-link">
+
+            <div class="subject-card">
+                {{ subject }}
+            </div>
+
+        </a>
+
+        {% endfor %}
+
+        
+
+    </div>
+
+    <!-- LEADERBOARD -->
+
+    <h2 class="section-title">
+        Leaderboard
+    </h2>
+
+    <div class="leaderboard">
+
+        <div class="leader-item">
+            Coming Soon...
+        </div>
+
+    </div>
+
+    <!-- BOTTOM NAVIGATION -->
+
+    <div class="bottom-nav">
+
+        <a href="/dashboard"
+           class="nav-item active-nav">
+
+            📝
+            <span>Home</span>
+
+        </a>
+
+        <a href="/about"
+           class="nav-item">
+
+            🎓
+            <span>About You</span>
+
+        </a>
+
+        <a href="/profile"
+           class="nav-item">
+
+            🧑‍🚀
+            <span>Profile</span>
+
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

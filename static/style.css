@@ -299,3 +299,182 @@ form{
 .subject-card{
     overflow-wrap: break-word;
 }
+/* RESULT PAGE MOBILE FIX */
+
+.result-container{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+
+    width:100%;
+    max-width:900px;
+
+    margin:auto;
+    padding:15px;
+}
+
+.subject-card,
+.result-card{
+
+    width:100%;
+    box-sizing:border-box;
+
+    margin-bottom:15px;
+
+    word-wrap:break-word;
+}
+
+@media (max-width:768px){
+
+    .result-container{
+
+        display:flex;
+        flex-direction:column;
+
+        width:100%;
+        padding:10px;
+    }
+
+    .subject-card,
+    .result-card{
+
+        width:100%;
+        margin-bottom:15px;
+    }
+
+}
+/* RESULT PAGE FULL VERTICAL LAYOUT */
+
+.dashboard{
+    width:100%;
+    max-width:700px;
+    margin:auto;
+    padding:15px;
+}
+
+.result-container{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+}
+
+.subject-card,
+.result-card,
+.top-card{
+
+    width:100%;
+    max-width:700px;
+
+    margin:15px auto;
+
+    box-sizing:border-box;
+}
+
+/* STOP HORIZONTAL SCROLL */
+
+html,
+body{
+
+    overflow-x:hidden;
+    overflow-y:auto;
+
+    width:100%;
+}
+
+/* MOBILE FIX */
+
+@media screen and (max-width:768px){
+
+    .dashboard,
+    .subject-card,
+    .result-card,
+    .top-card{
+
+        width:100%;
+        max-width:100%;
+    }
+}
+/* ==========================================================================
+   EXAMORA PREMIUM NEON THEME (ADDED INCREMENTALLY)
+   ========================================================================== */
+:root {
+    --bg-dark: #070b19;
+    --card-bg: rgba(13, 22, 47, 0.7);
+    --neon-cyan: #00f2fe;
+    --electric-blue: #4facfe;
+    --text-main: #f1f5f9;
+    --text-muted: #64748b;
+}
+
+body.examora-theme {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding-bottom: 70px; /* Space for the bottom global navigation bar */
+}
+
+/* Premium Glassmorphism Glowing Cards */
+.glow-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 
+                inset 0 0 12px rgba(0, 242, 254, 0.05);
+    backdrop-filter: blur(8px);
+}
+
+.glow-card-cyan {
+    border-color: rgba(0, 242, 254, 0.4);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+}
+
+/* Quick Action Chips for AI Tutor */
+.ai-chip {
+    background: rgba(0, 242, 254, 0.1);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    color: var(--neon-cyan);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ai-chip:hover {
+    background: var(--neon-cyan);
+    color: var(--bg-dark);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+}
+
+/* Persistent Mobile Bottom Navigation Menu */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(7, 11, 25, 0.95);
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.nav-item {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item.active {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+}
