@@ -17,9 +17,6 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
-
-
 # ---------------- DATABASE ---------------- #
 
 def init_db():
@@ -80,6 +77,20 @@ def init_db():
     )
     """)
 
+    # ⭐ NEW: EXAM HISTORY TABLE ADDED HERE ⭐
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS exam_history (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        paper_id TEXT,
+        score TEXT,
+        total_questions INTEGER,
+        percentage REAL,
+        date_taken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users (id)
+    )
+    ''')
+
     # 4. CACHED AUTOMATED AI INFRASTRUCTURE INSIGHTS
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS ai_insights(
@@ -96,6 +107,7 @@ def init_db():
     conn.close()
 
 init_db()
+
 
 
 # ---------------- ADMIN ---------------- #
