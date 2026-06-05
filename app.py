@@ -77,19 +77,22 @@ def init_db():
     )
     """)
 
-    # ⭐ NEW: EXAM HISTORY TABLE ADDED HERE ⭐
+        # ⭐ UPDATED: EXAM HISTORY TABLE WITH CORRECT COLUMNS ⭐
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS exam_history (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
         user_id INTEGER,
         paper_id TEXT,
         score TEXT,
+        score_obtained REAL DEFAULT 0,
         total_questions INTEGER,
         percentage REAL,
         date_taken TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users (id)
     )
     ''')
+
 
     # 4. CACHED AUTOMATED AI INFRASTRUCTURE INSIGHTS
     cursor.execute("""
