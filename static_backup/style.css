@@ -1,0 +1,480 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background: linear-gradient(to bottom, #03152b, #000814);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+    font-family:'Poppins', sans-serif;
+}
+
+.splash-container{
+    text-align:center;
+    animation: fadeIn 2s ease;
+}
+
+.logo{
+    width:140px;
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px #00c3ff);
+}
+
+.brand{
+    margin-top:20px;
+    font-size:48px;
+    font-family:'Cinzel', serif;
+    letter-spacing:4px;
+}
+
+.exam{
+    color:white;
+}
+
+.ora{
+    color:#00cfff;
+}
+
+.tagline{
+    margin-top:12px;
+    color:#b8dfff;
+    font-size:16px;
+    letter-spacing:3px;
+}
+
+@keyframes float{
+    0%{
+        transform:translateY(0px);
+    }
+
+    50%{
+        transform:translateY(-10px);
+    }
+
+    100%{
+        transform:translateY(0px);
+    }
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+    }
+
+    to{
+        opacity:1;
+    }
+}
+.form-container{
+    width:90%;
+    max-width:350px;
+    background:rgba(255,255,255,0.05);
+    padding:30px;
+    border-radius:20px;
+    backdrop-filter:blur(10px);
+    text-align:center;
+    box-shadow:0 0 20px rgba(0, 195, 255, 0.2);
+}
+
+.small-logo{
+    width:90px;
+    margin-bottom:15px;
+}
+
+.form-title{
+    color:white;
+    margin-bottom:25px;
+    font-family:'Cinzel', serif;
+}
+
+form{
+    display:flex;
+    flex-direction:column;
+}
+
+input{
+    margin-bottom:15px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    color:white;
+    font-size:16px;
+}
+
+input::placeholder{
+    color:#b8dfff;
+}
+
+button{
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:#00cfff;
+    color:#03152b;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+.switch-text{
+    margin-top:20px;
+    color:white;
+}
+
+.switch-text a{
+    color:#00cfff;
+    text-decoration:none;
+}
+select{
+    margin-bottom:15px;
+    padding:14px;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    color:white;
+    font-size:16px;
+}
+.dashboard{
+    padding:20px;
+    color:white;
+}
+
+.top-card{
+    background:rgba(255,255,255,0.05);
+    border-radius:20px;
+    padding:20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+    box-shadow:0 0 20px rgba(0,255,255,0.1);
+}
+
+.dashboard-logo{
+    width:70px;
+}
+
+.welcome{
+    font-size:26px;
+    margin-bottom:5px;
+}
+
+.academic-info{
+    color:#9fdcff;
+}
+
+.section-title{
+    margin-bottom:15px;
+    margin-top:20px;
+}
+
+.subjects-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:15px;
+}
+
+.subject-card{
+    background:rgba(255,255,255,0.06);
+    padding:25px;
+    border-radius:18px;
+    text-align:center;
+    font-size:18px;
+    transition:0.3s;
+    box-shadow:0 0 15px rgba(0,255,255,0.08);
+}
+
+.subject-card:hover{
+    transform:scale(1.03);
+}
+
+.leaderboard{
+    margin-top:10px;
+}
+
+.leader-item{
+    background:rgba(255,255,255,0.05);
+    padding:15px;
+    border-radius:14px;
+    margin-bottom:10px;
+}
+
+.bottom-buttons{
+    margin-top:30px;
+    text-align:center;
+}
+
+.logout-btn{
+    background:#00cfff;
+    padding:14px 30px;
+    border-radius:14px;
+    text-decoration:none;
+    color:#03152b;
+    font-weight:bold;
+}
+.bottom-nav{
+
+    position: fixed;
+
+    bottom: 15px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 90%;
+
+    background: rgba(20,20,20,0.95);
+
+    border-radius: 25px;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    padding: 12px 0;
+
+    box-shadow: 0 0 20px rgba(0,0,0,0.4);
+
+}
+
+.nav-item{
+
+    color: white;
+
+    text-decoration: none;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    font-size: 14px;
+
+    transition: 0.3s;
+
+}
+
+.nav-item:hover{
+
+    transform: scale(1.08);
+
+}
+
+.active-nav{
+
+    color: #00c3ff;
+
+}
+html, body{
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+.dashboard{
+    min-height: 100vh;
+    padding-bottom: 120px;
+}
+
+form{
+    width: 100%;
+}
+
+.subject-card{
+    overflow-wrap: break-word;
+}
+/* RESULT PAGE MOBILE FIX */
+
+.result-container{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+
+    width:100%;
+    max-width:900px;
+
+    margin:auto;
+    padding:15px;
+}
+
+.subject-card,
+.result-card{
+
+    width:100%;
+    box-sizing:border-box;
+
+    margin-bottom:15px;
+
+    word-wrap:break-word;
+}
+
+@media (max-width:768px){
+
+    .result-container{
+
+        display:flex;
+        flex-direction:column;
+
+        width:100%;
+        padding:10px;
+    }
+
+    .subject-card,
+    .result-card{
+
+        width:100%;
+        margin-bottom:15px;
+    }
+
+}
+/* RESULT PAGE FULL VERTICAL LAYOUT */
+
+.dashboard{
+    width:100%;
+    max-width:700px;
+    margin:auto;
+    padding:15px;
+}
+
+.result-container{
+    display:flex;
+    flex-direction:column;
+    width:100%;
+}
+
+.subject-card,
+.result-card,
+.top-card{
+
+    width:100%;
+    max-width:700px;
+
+    margin:15px auto;
+
+    box-sizing:border-box;
+}
+
+/* STOP HORIZONTAL SCROLL */
+
+html,
+body{
+
+    overflow-x:hidden;
+    overflow-y:auto;
+
+    width:100%;
+}
+
+/* MOBILE FIX */
+
+@media screen and (max-width:768px){
+
+    .dashboard,
+    .subject-card,
+    .result-card,
+    .top-card{
+
+        width:100%;
+        max-width:100%;
+    }
+}
+/* ==========================================================================
+   EXAMORA PREMIUM NEON THEME (ADDED INCREMENTALLY)
+   ========================================================================== */
+:root {
+    --bg-dark: #070b19;
+    --card-bg: rgba(13, 22, 47, 0.7);
+    --neon-cyan: #00f2fe;
+    --electric-blue: #4facfe;
+    --text-main: #f1f5f9;
+    --text-muted: #64748b;
+}
+
+body.examora-theme {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding-bottom: 70px; /* Space for the bottom global navigation bar */
+}
+
+/* Premium Glassmorphism Glowing Cards */
+.glow-card {
+    background: var(--card-bg);
+    border: 1px solid rgba(79, 172, 254, 0.2);
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 
+                inset 0 0 12px rgba(0, 242, 254, 0.05);
+    backdrop-filter: blur(8px);
+}
+
+.glow-card-cyan {
+    border-color: rgba(0, 242, 254, 0.4);
+    box-shadow: 0 0 15px rgba(0, 242, 254, 0.1);
+}
+
+/* Quick Action Chips for AI Tutor */
+.ai-chip {
+    background: rgba(0, 242, 254, 0.1);
+    border: 1px solid rgba(0, 242, 254, 0.3);
+    color: var(--neon-cyan);
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ai-chip:hover {
+    background: var(--neon-cyan);
+    color: var(--bg-dark);
+    box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+}
+
+/* Persistent Mobile Bottom Navigation Menu */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(7, 11, 25, 0.95);
+    border-top: 1px solid rgba(79, 172, 254, 0.2);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px 0;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.nav-item {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.nav-item.active {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+}
