@@ -1114,7 +1114,27 @@ def allowed_file(filename):
 
 
 
+from flask import Response
 
+@app.route("/sitemap.xml")
+def sitemap():
+    xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://examora-gmc3.onrender.com/</loc>
+  </url>
+  <url>
+    <loc>https://examora-gmc3.onrender.com/login</loc>
+  </url>
+  <url>
+    <loc>https://examora-gmc3.onrender.com/signup</loc>
+  </url>
+  <url>
+    <loc>https://examora-gmc3.onrender.com/about</loc>
+  </url>
+</urlset>
+"""
+    return Response(xml, mimetype="application/xml")
 if __name__ == '__main__':
     app.run(
         host='0.0.0.0',
