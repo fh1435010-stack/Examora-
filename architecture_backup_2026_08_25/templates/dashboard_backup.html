@@ -1,0 +1,203 @@
+‎<!DOCTYPE html>
+‎<html lang="en">
+‎<head>
+‎    <meta charset="UTF-8">
+‎    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+‎    <title>Examora Dashboard</title>
+‎    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.
+4.0/css/all.min.css">
+‎    <style>
+‎        :root {
+‎            --bg-dark: #030712;
+‎            --card-dark: #0b1329;
+‎            --neon-cyan: #00f0ff;
+‎            --neon-blue: #38bdf8;
+‎            --neon-purple: #a855f7;
+‎            --neon-green: #22c55e;
+‎            --neon-orange: #f97316;
+‎            --text-main: #f3f4f6;
+‎            --text-gray: #9ca3af;
+‎            --text-dim: #4b5563;
+‎            --cyan-glow: rgba(0, 240, 255, 0.15);
+‎            --blue-glow: rgba(56, 189, 248, 0.15);
+‎        }
+‎
+‎        * { box-sizing: border-box; margin: 0; padding: 0; }
+‎        body {
+‎            background-color: var(--bg-dark);
+‎            color: var(--text-main);
+‎            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-se
+rif;
+‎            padding: 20px 16px 90px 16px;
+‎        }
+‎
+‎        /* PREMIUM TOP NAVIGATION BAR */
+‎        .top-bar { display: flex; justify-content: space-between; align-items: center; 
+margin-bottom: 24px; gap: 12px; }
+‎        .app-logo { font-size: 22px; font-weight: 900; color: #ffffff; text-decoration:
+ none; letter-spacing: 0.5px; }
+‎        .app-logo span { color: var(--neon-cyan); text-shadow: 0 0 10px var(--cyan-glow
+); }
+‎        .search-box
+ { flex: 1; background: #0f172a; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 8px 14px; display: >
+‎        .search-box
+:focus-within { border-color: var(--neon-blue); box-shadow: 0 0 12px var(--blue-glow); }
+‎        .search-box input { background: none; border: none; color: #ffffff; font-size: 13px; width: 100%; outline: none; }
+‎        .profile-btn
+ { width: 36px; height: 36px; background: var(--card-dark); border: 1px solid rgba(56,189,248,0.2);
+ border-radius: 50%; dis>
+‎        .profile-btn:active { background: var(--neon-blue); color: #000; }
+‎
+‎        /* WELCOME STATS BLOCK HERO */
+‎        .welcome-section { background: linear-gradient(135deg, #0b1528 0%, #040814 100%); border: 1px solid rgba(56, 189, 248, 0.12); border-ra>
+‎        .welcome-section h2 { font-size: 18px; font-weight: 800; margin-bottom: 4px; letter-spacing: -0.3px; }
+‎        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+‎        .stat-card { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255,255,255,0.04); border-radius: 12px; padding: 12px 8px; t>
+‎        .stat-card i { font-size: 16px; margin-bottom: 6px; display: block; }
+‎        .stat-card.marks i { color: var(--neon-blue); }                                                                                      
+           .stat-card.streak i { color: var(--neon-orange); }
+‎        .stat-card.rank i { color: var(--neon-purple); }
+‎        .stat-num { font-size: 14px; font-weight: 800; display: block; color: #ffffff; }
+‎        .stat-lbl { font-size: 9px; color: var(--text-gray); text-transform: uppercase; margin-top: 4px; font-weight: 600; letter-spacing: 0.3p>
+‎
+‎        .section-title { font-size: 14px; font-weight: 800; margin: 24px 0 12px 0; display: flex; justify-content: space-between; align-items: >
+‎        .section-title span { font-size: 11px; color: var(--neon-cyan); font-weight: 600; text-transform: none; }
+‎
+‎        /* SUBJECTS MINIMAL GRID LAYOUT */
+‎        .subjects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+‎        .sub-box { background: var(--card-dark); border: 1px solid rgba(255,255,255,0.03); border-radius: 14px; padding: 14px; text-decoration:>
+‎        .sub-box:active { border-color: var(--neon-cyan); transform: scale(0.98); }
+‎        .sub-icon-row { display: flex; justify-content: space-between; align-items: center; }
+‎        .sub-icon { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px>
+‎        .sub-name { font-size: 13px; font-weight: 700; color: #ffffff; }
+‎        .progress-bar-bg { width: 100%; height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+‎        .progress-bar-fill { height: 100%; width: 65%; border-radius: 3px; }
+‎
+‎        .sub-box[data-sub="Physics"] .sub-icon { color: var(--neon-blue); background: rgba(56,189,248,0.08); }
+‎        .sub-box[data-sub="Physics"] .progress-bar-fill { background: var(--neon-blue); }
+‎        .sub-box[data-sub="Chemistry"] .sub-icon { color: var(--neon-green); background: rgba(34,197,94,0.08); }
+‎        .sub-box[data-sub="Chemistry"] .progress-bar-fill { background: var(--neon-green); }
+‎        .sub-box[data-sub="Biology"] .sub-icon { color: #a3e635; background: rgba(163,230,53,0.08); }
+‎        .sub-box[data-sub="Biology"] .progress-bar-fill { background: #a3e635; }
+‎        .sub-box[data-sub="Mathematics"] .sub-icon { color: var(--neon-purple); background: rgba(168,85,247,0.08); }
+‎        .sub-box[data-sub="Mathematics"] .progress-bar-fill { background: var(--neon-purple); }
+‎        .sub-box[data-sub="English"] .sub-icon { color: #f43f5e; background: rgba(244,63,94,0.08); }
+‎        .sub-box[data-sub="English"] .progress-bar-fill { background: #f43f5e; }
+‎        .sub-box[data-sub="Urdu"] .sub-icon { color: var(--neon-orange); background: rgba(249,115,22,0.08); }
+‎        .sub-box[data-sub="Urdu"] .progress-bar-fill { background: var(--neon-orange); }
+‎        .sub-box[data-sub="Islamiat"] .sub-icon { color: #10b981; background: rgba(16,185,129,0.08); }
+‎
+‎        .sub-box[data-sub="Islamiat"] .progress-bar-fill { background: #10b981; }
+‎        .sub-box[data-sub="Pakistan Studies"] .sub-icon { color: var(--neon-cyan); background: rgba(0,240,255,0.08); }
+‎        .sub-box[data-sub="Pakistan Studies"] .progress-bar-fill { background: var(--neon-cyan); }
+‎
+‎        /* AI ASSISTANCE ACCENTS */
+‎        .ai-box { background: linear-gradient(145deg, #0a1124 0%, #050a18 100%); border: 1px solid rgba(0, 240, 255, 0.12); border-radius: 16px>
+‎        .ai-greeting { font-size: 13px; color: var(--text-gray); margin-bottom: 14px; display: flex; align-items: flex-start; gap: 10px; line-h>
+‎        .ai-buttons-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+‎        .ai-cmd-btn { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 10px; color: >
+‎        .ai-cmd-btn i { color: var(--neon-cyan); font-size: 13px; }
+‎
+‎        /* ENTERTAINMENT ACCELERATE CARDS */
+‎        .ent-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+‎        .ent-card { background: var(--card-dark); border: 1px solid rgba(255,255,255,0.03); border-radius: 12px; padding: 14px 8px; text-align:>
+‎        .ent-card i { font-size: 18px; margin-bottom: 6px; display: block; }
+‎        .ent-card.battle i { color: #f43f5e; }
+‎        .ent-card.brain i { color: #eab308; }
+‎        .ent-card.riddle i { color: #3b82f6; }
+‎        .ent-title { font-size: 11px; font-weight: 700; }
+‎
+‎        /* MONITOR ROW PANELS */
+‎        .split-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+‎        .split-box { background: var(--card-dark); border-radius: 14px; padding: 14px; min-height: 100px; border: 1px solid rgba(255,255,255,0.>
+‎        .split-box h4 { font-size: 12px; font-weight: 700; color: var(--text-gray); margin-bottom: 8px; display: flex; align-items: center; gap>
+‎        .split-box h4 i { color: var(--neon-blue); }
+‎        .quote-text { font-style: italic; color: var(--text-gray); line-height: 1.4; font-size: 11px; }
+‎
+‎        /* FIXED BOTTOM HUD DISPLAY BAR */
+‎        .nav-dock { position: fixed; bottom: 0; left: 0; width: 100%; background: #070c18; border-top: 1px solid rgba(255, 255, 255, 0.06); dis>
+‎        .nav-link { display: flex; flex-direction: column; align-items: center; color: var(--text-gray); text-decoration: none; font-size: 10px>
+‎        .nav-link.active { color: var(--neon-blue); }
+‎        .nav-link i { font-size: 16px; }
+‎    </style>
+‎</head>
+‎<body>
+‎
+‎    <div class="top-bar">
+‎        <a href="/dashboard" class="app-logo">EXAM<span>ORA</span></a>
+‎        <div class="search-box">
+‎            <i class="fa-solid fa-magnifying-glass" style="color: var(--text-dim); font-size: 12px;"></i>
+‎            <input type="text" placeholder="Search quiz maps...">
+‎        </div>
+‎        <a href="/profile" class="profile-btn"><i class="fa-regular fa-user"></i></a>
+‎    </div>
+‎
+‎    <div class="welcome-section">
+‎        <h2 style="font-weight: 800;">Welcome, {{ username }}</h2>
+‎        <div style="font-size: 11px; color: var(--neon-blue); font-weight: 700; margin-top: 2px; text-transform: uppercase; letter-spacing: 0.3>
+‎            <i class="fa-solid fa-layer-group" style="font-size: 10px; margin-right: 4px;"></i> {{ board }} • {{ class_name }}
+‎        </div>
+‎        <div class="stats-grid">
+‎    <div class="stat-card marks">
+‎        <i class="fa-solid fa-circle-check"></i>
+‎        <span class="stat-num">{{ total_marks }}</span>
+‎        <span class="stat-lbl">Total Marks</span>
+‎    </div>
+‎
+‎    <div class="stat-card streak">
+‎        <i class="fa-solid fa-bolt-lightning"></i>
+‎        <span class="stat-num">{{ streak }} Days</span>
+‎        <span class="stat-lbl">Active Streak</span>
+‎    </div>
+‎
+‎    <div class="stat-card rank">
+‎        <i class="fa-solid fa-ranking-star"></i>
+‎        <span class="stat-num">#{{ pk_position }}</span>
+‎        <span class="stat-lbl">National Rank</span>
+‎    </div>
+‎
+‎    <div class="stat-card rank">
+‎        <i class="fa-solid fa-trophy"></i>
+‎        <span class="stat-num">#{{ board_position }}</span>
+‎        <span class="stat-lbl">Board Rank</span>
+‎    </div>
+‎</div>
+‎
+‎
+‎    <div class="section-title">
+‎        <h3>Exam Core Subjects</h3>
+‎        <span>Filter Set <i class="fa-solid fa-sliders" style="margin-left: 2px;"></i></span>
+‎    </div>
+‎    <div class="subjects-grid">
+‎        {% for subject in subjects %}
+‎        <a href="/subject/{{ subject }}" class="sub-box" data-sub="{{ subject }}">
+‎            <div class="sub-icon-row">
+‎                <div class="sub-icon">
+‎                    {% if subject == "Physics" %}<i class="fa-solid fa-atom"></i>
+‎                    {% elif subject == "Chemistry" %}<i class="fa-solid fa-flask-vial"></i>
+‎                    {% elif subject == "Biology" %}<i class="fa-solid fa-dna"></i>
+‎                    {% elif subject == "Mathematics" %}<i class="fa-solid fa-calculator"></i>
+‎                    {% elif subject == "English" %}<i class="fa-solid fa-signature"></i>
+‎                    {% elif subject == "Urdu" %}<i class="fa-solid fa-pen-fancy"></i>
+‎                    {% elif subject == "Islamiat" %}<i class="fa-solid fa-kaaba"></i>
+‎                    {% else %}<i class="fa-solid fa-book-bookmark"></i>{% endif %}
+‎                </div>
+‎                <i class="fa-solid fa-arrow-right-long" style="font-size: 11px; color: var(--text-dim);"></i>
+‎            </div>
+‎            <div class="sub-name">{{ subject }}</div>
+‎            <div class="progress-bar-bg">
+‎                <div class="progress-bar-fill"></div>
+‎            </div>
+‎        </a>
+‎        {% endfor %}
+‎    </div>
+‎
+‎
+‎    <nav class="nav-dock">
+‎        <a href="/dashboard" class="nav-link active"><i class="fa-solid fa-chart-pie"></i><span>Console</span></a>
+‎        <a href="/leaderboard" class="nav-link"><i class="fa-solid fa-ranking-star"></i><span>Rankings</span></a>
+‎        <a href="/profile" class="nav-link"><i class="fa-solid fa-sliders"></i><span>Identity</span></a>
+‎    </nav>
+‎
+‎</body>
+‎</html>

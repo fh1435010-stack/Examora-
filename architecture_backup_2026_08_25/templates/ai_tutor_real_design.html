@@ -1,0 +1,247 @@
+	<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Examora AI Tutor</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header {
+        background: #111827;
+        color: white;
+        padding: 18px;
+        text-align: center;
+    }
+
+    .header h2 {
+        margin: 0;
+    }
+
+    .header p {
+        margin: 6px 0 0;
+        opacity: 0.8;
+        font-size: 14px;
+    }
+
+    #chat-box {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .message {
+        max-width: 85%;
+        padding: 12px 15px;
+        border-radius: 15px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+    }
+
+    .ai-message {
+        background: white;
+        align-self: flex-start;
+        border: 1px solid #e5e7eb;
+    }
+
+    .user-message {
+        background: #111827;
+        color: white;
+        align-self: flex-end;
+    }
+
+    .input-area {
+        display: flex;
+        gap: 10px;
+        padding: 12px;
+        background: white;
+        border-top: 1px solid #ddd;
+    }
+
+    #message {
+        flex: 1;
+        padding: 14px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    #send-btn {
+        border: none;
+        padding: 0 20px;
+        border-radius: 10px;
+        background: #111827;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #send-btn:disabled {
+        opacity: 0.5;
+    }
+
+    .back {
+        color: white;
+        text-decoration: none;
+        position: absolute;
+        left: 15px;
+        top: 20px;
+    }
+</style>
+
+</head><body><div class="header">
+    <a href="/dashboard" class="back">← Back</a>
+
+    <h2>🤖 Examora AI Tutor</h2>
+
+    <p>
+        Ask questions • Understand concepts • Learn better
+    </p>
+</div>
+
+<div id="chat-box">
+
+    <div class="message ai-message">
+        Assalam-o-Alaikum! 👋
+
+        I am your Examora AI Tutor.
+
+        Ask me anything about your studies. I will try to explain it according to your education level.
+    </div>
+
+</div>
+
+<div class="input-area">
+
+    <input
+        type="text"
+        id="message"
+        placeholder="Ask Examora AI..."
+        autocomplete="off"
+    >
+
+    <button id="send-btn" onclick="sendMessage()">
+        Send
+    </button>
+
+</div>
+
+<script>
+
+async function sendMessage() {
+
+    const input = document.getElementById("message");
+    const chatBox = document.getElementById("chat-box");
+    const button = document.getElementById("send-btn");
+
+    const message = input.value.trim();
+
+    if (!message) return;
+
+
+    const userMessage = document.createElement("div");
+
+    userMessage.className = "message user-message";
+
+    userMessage.textContent = message;
+
+    chatBox.appendChild(userMessage);
+
+
+    input.value = "";
+
+    button.disabled = true;
+
+    button.textContent = "Thinking...";
+
+
+    try {
+
+        const response = await fetch("/api/ai-tutor", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                message: message
+            })
+
+        });
+
+
+        const data = await response.json();
+
+
+        const aiMessage = document.createElement("div");
+
+        aiMessage.className = "message ai-message";
+
+
+        if (data.success) {
+
+            aiMessage.textContent = data.answer;
+
+        } else {
+
+            aiMessage.textContent =
+                "Sorry, Examora AI is temporarily unavailable.";
+
+        }
+
+
+        chatBox.appendChild(aiMessage);
+
+
+    } catch (error) {
+
+        const errorMessage = document.createElement("div");
+
+        errorMessage.className = "message ai-message";
+
+        errorMessage.textContent =
+            "Connection error. Please try again.";
+
+        chatBox.appendChild(errorMessage);
+
+    }
+
+
+
+    button.disabled = false;
+
+    button.textContent = "Send";
+
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+}
+
+
+document.getElementById("message").addEventListener("keypress", function(event) {
+
+    if (event.key === "Enter") {
+
+        sendMessage();
+
+    }
+
+});
+
+</script></body>
+</html>

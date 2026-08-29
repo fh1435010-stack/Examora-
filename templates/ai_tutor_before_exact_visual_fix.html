@@ -1,0 +1,907 @@
+<!DOCTYPE html><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Examora AI Tutor</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .header {
+        background: #111827;
+        color: white;
+        padding: 18px;
+        text-align: center;
+    }
+
+    .header h2 {
+        margin: 0;
+    }
+
+    .header p {
+        margin: 6px 0 0;
+        opacity: 0.8;
+        font-size: 14px;
+    }
+
+    #chat-box {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .message {
+        max-width: 85%;
+        padding: 12px 15px;
+        border-radius: 15px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+    }
+
+    .ai-message {
+        background: white;
+        align-self: flex-start;
+        border: 1px solid #e5e7eb;
+    }
+
+    .user-message {
+        background: #111827;
+        color: white;
+        align-self: flex-end;
+    }
+
+    .input-area {
+        display: flex;
+        gap: 10px;
+        padding: 12px;
+        background: white;
+        border-top: 1px solid #ddd;
+    }
+
+    #message {
+        flex: 1;
+        padding: 14px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        font-size: 16px;
+    }
+
+    #send-btn {
+        border: none;
+        padding: 0 20px;
+        border-radius: 10px;
+        background: #111827;
+        color: white;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    #send-btn:disabled {
+        opacity: 0.5;
+    }
+
+    .back {
+        color: white;
+        text-decoration: none;
+        position: absolute;
+        left: 15px;
+        top: 20px;
+    }
+
+/* =========================================
+   EXAMORA AI — CHATGPT STYLE UI UPGRADE
+   Visual upgrade only. Existing API remains.
+========================================= */
+
+body {
+    background: #212121 !important;
+    color: #ececec !important;
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+
+.header {
+    background: #212121 !important;
+    border-bottom: 1px solid #303030;
+    padding: 16px 60px !important;
+    text-align: center;
+    position: relative;
+}
+
+.header h2 {
+    font-size: 18px !important;
+    font-weight: 600;
+}
+
+.header p {
+    display: none;
+}
+
+.back {
+    width: 40px;
+    height: 40px;
+    left: 14px !important;
+    top: 9px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    border-radius: 10px;
+    color: #ececec !important;
+    font-size: 0;
+}
+
+.back::after {
+    content: "☰";
+    font-size: 22px;
+}
+
+#chat-box {
+    background: #212121;
+    padding: 28px max(16px, calc((100vw - 760px) / 2)) 130px !important;
+    gap: 22px !important;
+}
+
+.message {
+    max-width: 100% !important;
+    padding: 14px 18px !important;
+    border-radius: 18px !important;
+    font-size: 15px;
+    line-height: 1.65 !important;
+}
+
+.ai-message {
+    background: transparent !important;
+    border: none !important;
+    color: #ececec !important;
+    align-self: flex-start;
+    padding-left: 0 !important;
+}
+
+.user-message {
+    background: #303030 !important;
+    color: #f4f4f4 !important;
+    align-self: flex-end;
+    max-width: 82% !important;
+    border-radius: 20px !important;
+}
+
+.input-area {
+    position: fixed !important;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    background: linear-gradient(
+        to top,
+        #212121 78%,
+        rgba(33, 33, 33, 0)
+    ) !important;
+    border-top: none !important;
+    padding: 22px 14px 18px !important;
+    display: flex !important;
+    max-width: none !important;
+}
+
+#message {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: 0;
+    min-height: 52px;
+    padding: 15px 55px 15px 18px !important;
+    background: #303030 !important;
+    border: 1px solid #444 !important;
+    color: #ececec !important;
+    border-radius: 26px !important;
+    font-size: 15px !important;
+    box-shadow: none !important;
+}
+
+#message:focus {
+    border-color: #5a5a5a !important;
+    outline: none !important;
+}
+
+#message::placeholder {
+    color: #9b9b9b;
+}
+
+#send-btn {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px;
+    padding: 0 !important;
+    margin-left: -52px !important;
+    margin-top: 5px;
+    margin-right: auto;
+    border-radius: 50% !important;
+    background: #f1f1f1 !important;
+    color: #212121 !important;
+    font-size: 0 !important;
+    z-index: 2;
+}
+
+#send-btn::after {
+    content: "↑";
+    font-size: 23px;
+    font-weight: bold;
+}
+
+#send-btn:disabled {
+    background: #555 !important;
+    color: #999 !important;
+}
+
+@media (max-width: 600px) {
+    .header {
+        padding: 15px 55px !important;
+    }
+
+    .header h2 {
+        font-size: 16px !important;
+    }
+
+    #chat-box {
+        padding: 22px 16px 120px !important;
+    }
+
+    .message {
+        font-size: 15px !important;
+    }
+
+    .user-message {
+        max-width: 88% !important;
+    }
+
+    .input-area {
+        padding: 14px 10px 12px !important;
+    }
+}
+
+
+
+/* =====================================================
+   EXAMORA FIRST PICTURE DESIGN
+   VISUAL UPGRADE ONLY — CHAT SYSTEM UNTOUCHED
+===================================================== */
+
+body {
+    background: #09090b !important;
+    color: #f4f4f5 !important;
+    font-family: Arial, sans-serif !important;
+    min-height: 100vh !important;
+}
+
+/* ---------- TOP HEADER ---------- */
+
+.header {
+    position: relative !important;
+    height: 82px !important;
+    min-height: 82px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    padding: 0 20px !important;
+
+    background: rgba(9, 9, 11, 0.96) !important;
+
+    border: none !important;
+    border-bottom: 1px solid #1e1e22 !important;
+
+    text-align: center !important;
+
+    box-shadow: none !important;
+}
+
+.header h2 {
+    position: relative !important;
+
+    margin: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    gap: 12px !important;
+
+    color: #f4f4f5 !important;
+
+    font-size: 26px !important;
+    font-weight: 700 !important;
+
+    letter-spacing: -0.4px !important;
+}
+
+.header h2::before {
+    content: "E" !important;
+
+    width: 54px !important;
+    height: 54px !important;
+
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border-radius: 17px !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2fc7c6 0%,
+            #438be8 100%
+        ) !important;
+
+    color: #071116 !important;
+
+    font-size: 25px !important;
+    font-weight: 800 !important;
+
+    box-shadow:
+        0 8px 28px rgba(46, 166, 220, 0.20) !important;
+}
+
+/* Hide old subtitle to create clean ChatGPT-like header */
+
+.header p {
+    display: none !important;
+}
+
+/* ---------- LEFT MENU BUTTON ---------- */
+
+.back {
+    position: absolute !important;
+
+    left: 20px !important;
+    top: 50% !important;
+
+    transform: translateY(-50%) !important;
+
+    width: 58px !important;
+    height: 58px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    overflow: hidden !important;
+
+    border-radius: 50% !important;
+
+    background: #18181c !important;
+
+    color: transparent !important;
+
+    text-decoration: none !important;
+
+    font-size: 0 !important;
+
+    transition:
+        transform 0.2s,
+        background 0.2s !important;
+}
+
+.back::before {
+    content: "" !important;
+
+    width: 25px !important;
+    height: 18px !important;
+
+    border-top: 3px solid #d8d8dc !important;
+    border-bottom: 3px solid #d8d8dc !important;
+
+    position: absolute !important;
+}
+
+.back::after {
+    content: "" !important;
+
+    width: 25px !important;
+    height: 3px !important;
+
+    background: #d8d8dc !important;
+
+    position: absolute !important;
+}
+
+.back:hover {
+    transform:
+        translateY(-50%)
+        scale(1.05) !important;
+
+    background: #242429 !important;
+}
+
+/* ---------- CHAT AREA ---------- */
+
+#chat-box {
+    width: 100% !important;
+
+    max-width: 900px !important;
+
+    margin: 0 auto !important;
+
+    padding:
+        56px
+        28px
+        150px !important;
+
+    gap: 24px !important;
+
+    background: transparent !important;
+
+    overflow-y: auto !important;
+}
+
+/* ---------- MESSAGES ---------- */
+
+.message {
+    max-width: 78% !important;
+
+    padding: 15px 19px !important;
+
+    border-radius: 20px !important;
+
+    font-size: 17px !important;
+
+    line-height: 1.7 !important;
+
+    white-space: pre-wrap !important;
+
+    word-break: break-word !important;
+
+    box-shadow: none !important;
+}
+
+/* AI response */
+
+.ai-message {
+    align-self: flex-start !important;
+
+    padding:
+        8px
+        6px !important;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    color: #eeeeef !important;
+
+    border-radius: 0 !important;
+
+    font-size: 17px !important;
+}
+
+/* First welcome message */
+
+#chat-box > .ai-message:first-child {
+    width: 100% !important;
+
+    max-width: 100% !important;
+
+    padding:
+        12px
+        0
+        20px !important;
+
+    text-align: center !important;
+
+    color: #d6d6da !important;
+
+    font-size: 18px !important;
+
+    line-height: 2 !important;
+}
+
+/* User bubble */
+
+.user-message {
+    align-self: flex-end !important;
+
+    background: #29292e !important;
+
+    color: #ffffff !important;
+
+    border:
+        1px solid
+        #34343a !important;
+
+    border-radius:
+        22px
+        22px
+        6px
+        22px !important;
+
+    box-shadow:
+        0 6px 20px
+        rgba(0, 0, 0, 0.20) !important;
+}
+
+/* ---------- BOTTOM AREA ---------- */
+
+.input-area {
+    position: fixed !important;
+
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+
+    z-index: 100 !important;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    gap: 12px !important;
+
+    padding:
+        16px
+        20px
+        max(18px, env(safe-area-inset-bottom)) !important;
+
+    background:
+        linear-gradient(
+            to top,
+            #09090b 78%,
+            rgba(9, 9, 11, 0)
+        ) !important;
+
+    border: none !important;
+}
+
+/* ChatGPT-style input pill */
+
+#message {
+    width: 100% !important;
+
+    min-height: 70px !important;
+
+    padding:
+        18px
+        76px
+        18px
+        26px !important;
+
+    background: #2b2b30 !important;
+
+    color: #f2f2f3 !important;
+
+    border:
+        1px solid
+        #414148 !important;
+
+    border-radius: 36px !important;
+
+    outline: none !important;
+
+    font-size: 18px !important;
+
+    box-shadow:
+        0 12px 40px
+        rgba(0, 0, 0, 0.30) !important;
+
+    transition:
+        border-color 0.2s,
+        background 0.2s !important;
+}
+
+#message:focus {
+    background: #303036 !important;
+
+    border-color: #55555e !important;
+}
+
+#message::placeholder {
+    color: #aaaab2 !important;
+}
+
+/* ---------- SEND BUTTON ---------- */
+
+#send-btn {
+    position: absolute !important;
+
+    right: 30px !important;
+
+    width: 58px !important;
+    height: 58px !important;
+
+    padding: 0 !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    border: none !important;
+
+    border-radius: 50% !important;
+
+    background:
+        linear-gradient(
+            135deg,
+            #35c8c5,
+            #2aa8bd
+        ) !important;
+
+    color: #071315 !important;
+
+    font-size: 0 !important;
+
+    cursor: pointer !important;
+
+    box-shadow:
+        0 8px 25px
+        rgba(47, 199, 198, 0.20) !important;
+
+    transition:
+        transform 0.2s,
+        filter 0.2s !important;
+}
+
+/* Up arrow */
+
+#send-btn::before {
+    content: "↑" !important;
+
+    font-size: 32px !important;
+
+    line-height: 1 !important;
+
+    font-weight: 400 !important;
+
+    color: #061012 !important;
+}
+
+#send-btn:hover {
+    transform: scale(1.06) !important;
+
+    filter: brightness(1.08) !important;
+}
+
+#send-btn:active {
+    transform: scale(0.94) !important;
+}
+
+#send-btn:disabled {
+    opacity: 0.45 !important;
+
+    cursor: not-allowed !important;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media (max-width: 600px) {
+
+    .header {
+        height: 72px !important;
+        min-height: 72px !important;
+    }
+
+    .header h2 {
+        font-size: 21px !important;
+        gap: 9px !important;
+    }
+
+    .header h2::before {
+        width: 47px !important;
+        height: 47px !important;
+
+        border-radius: 15px !important;
+
+        font-size: 22px !important;
+    }
+
+    .back {
+        left: 16px !important;
+
+        width: 52px !important;
+        height: 52px !important;
+    }
+
+    #chat-box {
+        padding:
+            40px
+            20px
+            135px !important;
+
+        gap: 20px !important;
+    }
+
+    .message {
+        max-width: 86% !important;
+
+        font-size: 16px !important;
+    }
+
+    #chat-box > .ai-message:first-child {
+        font-size: 17px !important;
+
+        line-height: 1.9 !important;
+    }
+
+    .input-area {
+        padding:
+            12px
+            18px
+            max(15px, env(safe-area-inset-bottom)) !important;
+    }
+
+    #message {
+        min-height: 66px !important;
+
+        padding:
+            17px
+            68px
+            17px
+            22px !important;
+
+        font-size: 17px !important;
+    }
+
+    #send-btn {
+        right: 27px !important;
+
+        width: 54px !important;
+        height: 54px !important;
+    }
+
+}
+
+</style>
+
+</head><body><div class="header">
+    <a href="/dashboard" class="back">← Back</a>
+
+    <h2>🤖 Examora AI Tutor</h2>
+
+    <p>
+        Ask questions • Understand concepts • Learn better
+    </p>
+</div>
+
+<div id="chat-box">
+
+    <div class="message ai-message">
+        Assalam-o-Alaikum! 👋
+
+        I am your Examora AI Tutor.
+
+        Ask me anything about your studies. I will try to explain it according to your education level.
+    </div>
+
+</div>
+
+<div class="input-area">
+
+    <input
+        type="text"
+        id="message"
+        placeholder="Ask Examora AI..."
+        autocomplete="off"
+    >
+
+    <button id="send-btn" onclick="sendMessage()">
+        Send
+    </button>
+
+</div>
+
+<script>
+
+async function sendMessage() {
+
+    const input = document.getElementById("message");
+    const chatBox = document.getElementById("chat-box");
+    const button = document.getElementById("send-btn");
+
+    const message = input.value.trim();
+
+    if (!message) return;
+
+
+    const userMessage = document.createElement("div");
+
+    userMessage.className = "message user-message";
+
+    userMessage.textContent = message;
+
+    chatBox.appendChild(userMessage);
+
+
+    input.value = "";
+
+    button.disabled = true;
+
+    button.textContent = "Thinking...";
+
+
+    try {
+
+        const response = await fetch("/api/ai-tutor", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                message: message
+            })
+
+        });
+
+
+        const data = await response.json();
+
+
+        const aiMessage = document.createElement("div");
+
+        aiMessage.className = "message ai-message";
+
+
+        if (data.success) {
+
+            aiMessage.textContent = data.answer;
+
+        } else {
+
+            aiMessage.textContent =
+                "Sorry, Examora AI is temporarily unavailable.";
+
+        }
+
+
+        chatBox.appendChild(aiMessage);
+
+
+    } catch (error) {
+
+        const errorMessage = document.createElement("div");
+
+        errorMessage.className = "message ai-message";
+
+        errorMessage.textContent =
+            "Connection error. Please try again.";
+
+        chatBox.appendChild(errorMessage);
+
+    }
+
+
+
+    button.disabled = false;
+
+    button.textContent = "Send";
+
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+}
+
+
+document.getElementById("message").addEventListener("keypress", function(event) {
+
+    if (event.key === "Enter") {
+
+        sendMessage();
+
+    }
+
+});
+
+</script></body>
+</html>

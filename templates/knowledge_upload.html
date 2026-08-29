@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Knowledge Source Upload - Examora</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <div class="top-card">
+
+        <div>
+            <h1 class="welcome">
+                Knowledge Source Upload
+            </h1>
+
+            <p class="academic-info">
+                Upload a PDF or multiple images for the Examora Knowledge System
+            </p>
+        </div>
+
+        <img src="{{ url_for('static', filename='logo.png') }}"
+             class="dashboard-logo">
+
+    </div>
+
+
+    <h2 class="section-title">
+        Source Information
+    </h2>
+
+
+    <form
+        action="/knowledge-upload"
+        method="POST"
+        enctype="multipart/form-data"
+    >
+
+        <label>Board</label>
+
+        <input
+            type="text"
+            name="board"
+            placeholder="e.g. Federal Board"
+            required
+        >
+
+
+        <label>Class</label>
+
+        <input
+            type="text"
+            name="class_name"
+            placeholder="e.g. 9"
+            required
+        >
+
+
+        <label>Group</label>
+
+        <input
+            type="text"
+            name="group_name"
+            placeholder="Optional"
+        >
+
+
+        <label>Subject</label>
+
+        <input
+            type="text"
+            name="subject"
+            placeholder="e.g. Physics"
+            required
+        >
+
+
+        <label>Upload Type</label>
+
+        <select
+            name="upload_type"
+            id="upload_type"
+            required
+        >
+            <option value="pdf">
+                PDF
+            </option>
+
+            <option value="images">
+                Multiple Images
+            </option>
+        </select>
+
+
+        <label>Choose File / Images</label>
+
+        <input
+            type="file"
+            name="source_files"
+            id="source_files"
+            accept=".pdf,.jpg,.jpeg,.png,.webp"
+            multiple
+            required
+        >
+
+
+        <br><br>
+
+
+        <button
+            type="submit"
+            class="logout-btn"
+        >
+            Upload Knowledge Source
+        </button>
+
+    </form>
+
+
+    <div class="bottom-buttons">
+
+        <a
+            href="/admin"
+            class="subject-card"
+        >
+            Back to Admin Panel
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

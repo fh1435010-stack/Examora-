@@ -1,0 +1,7 @@
+.git_history_backup_20260829/
+.git_old_backup/
+knowledge_uploads/
+normalized_pages/
+__pycache__/
+*.pyc
+*.pdf
